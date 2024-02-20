@@ -7,7 +7,7 @@
   inputs.gomod2nix.inputs.nixpkgs.follows = "nixpkgs";
   inputs.gomod2nix.inputs.flake-utils.follows = "flake-utils";
 
-  outputs =  inputs@{ self, nixpkgs, flake-utils, gomod2nix }:
+  outputs = inputs@{ self, nixpkgs, flake-utils, gomod2nix }:
     (flake-utils.lib.eachDefaultSystem
       (system:
         let
@@ -17,12 +17,9 @@
           # This has no effect on other platforms.
           callPackage = pkgs.darwin.apple_sdk_11_0.callPackage or pkgs.callPackage;
 
-          app =  callPackage ./. {
+          app = callPackage ./. {
             inherit (gomod2nix.legacyPackages.${system}) buildGoApplication;
           };
-
-          flakeryModule = (import ./flakery) app;
-          
         in
         {
           packages.default = app;
@@ -33,7 +30,34 @@
           nixosConfigurations.flakery = nixpkgs.lib.nixosSystem {
             system = system;
             modules = [
-             flakeryModule
+              { config, lib, pkgs, ... }:
+              let
+                flakeryDomain = builtins.readFile /metadata/flakery-domain;
+              in
+              {
+                networking.firewall.allowedTCPPorts = [ 80 443 ];
+
+                systemd.services.go-webserver = {
+                  description = "go webserver";
+                  after = [ "network.target" ];
+                  wantedBy = [ "multi-user.target" ];
+                  serviceConfig = {
+                    ExecStart = "${app}/bin/app";
+                    Restart = "always";
+                    KillMode = "process";
+                  };
+                };
+
+                services.caddy = {
+                  enable = true;
+                  virtualHosts."${flakeryDomain}".extraConfig = ''
+                    handle /* {
+                      reverse_proxy http://127.0.0.1:8080
+                    }
+                  '';
+                };
+              }
+
             ];
           };
 
