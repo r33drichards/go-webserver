@@ -6,6 +6,8 @@
   inputs.gomod2nix.url = "github:nix-community/gomod2nix";
   inputs.gomod2nix.inputs.nixpkgs.follows = "nixpkgs";
   inputs.gomod2nix.inputs.flake-utils.follows = "flake-utils";
+  inputs.flakery.url = "github:getflakery/flakery";
+
 
   outputs = inputs@{ self, nixpkgs, flake-utils, gomod2nix }:
     (flake-utils.lib.eachDefaultSystem
@@ -20,7 +22,7 @@
           app = callPackage ./. {
             inherit (gomod2nix.legacyPackages.${system}) buildGoApplication;
           };
-          flakeryModule = { config, lib, pkgs, ... }:
+          appModule = { config, lib, pkgs, ... }:
             let
               flakeryDomain = builtins.readFile /metadata/flakery-domain;
             in
@@ -58,7 +60,8 @@
           packages.nixosConfigurations.flakery = nixpkgs.lib.nixosSystem {
             system = system;
             modules = [
-              flakeryModule
+              flakery.nixosModules.flakery
+              appModule
             ];
           };
 
