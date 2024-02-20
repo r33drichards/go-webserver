@@ -9,7 +9,7 @@
   inputs.flakery.url = "github:getflakery/flakery";
 
 
-  outputs = inputs@{ self, nixpkgs, flake-utils, gomod2nix }:
+  outputs = inputs@{ self, nixpkgs, flake-utils, gomod2nix, flakery }:
     (flake-utils.lib.eachDefaultSystem
       (system:
         let
