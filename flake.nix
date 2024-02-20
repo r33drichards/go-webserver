@@ -20,21 +20,11 @@
           app = callPackage ./. {
             inherit (gomod2nix.legacyPackages.${system}) buildGoApplication;
           };
-        in
-        {
-          packages.default = app;
-          devShells.default = callPackage ./shell.nix {
-            inherit (gomod2nix.legacyPackages.${system}) mkGoEnv gomod2nix;
-          };
-
-          nixosConfigurations.flakery = nixpkgs.lib.nixosSystem {
-            system = system;
-            modules = [
-              { config, lib, pkgs, ... }:
-              let
-                flakeryDomain = builtins.readFile /metadata/flakery-domain;
-              in
-              {
+          flakeryModule = { config, lib, pkgs, ... }:
+            let
+              flakeryDomain = builtins.readFile /metadata/flakery-domain;
+            in
+            {
                 networking.firewall.allowedTCPPorts = [ 80 443 ];
 
                 systemd.services.go-webserver = {
@@ -56,8 +46,19 @@
                     }
                   '';
                 };
-              }
+            };
 
+        in
+        {
+          packages.default = app;
+          devShells.default = callPackage ./shell.nix {
+            inherit (gomod2nix.legacyPackages.${system}) mkGoEnv gomod2nix;
+          };
+
+          nixosConfigurations.flakery = nixpkgs.lib.nixosSystem {
+            system = system;
+            modules = [
+              flakeryModule
             ];
           };
 
