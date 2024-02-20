@@ -32,9 +32,6 @@
 
           nixosConfigurations.flakery = nixpkgs.lib.nixosSystem {
             system = system;
-            specialArgs = {
-              inherit inputs;
-            };
             modules = [
              flakeryModule
             ];
