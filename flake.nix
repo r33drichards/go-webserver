@@ -30,7 +30,7 @@
             inherit (gomod2nix.legacyPackages.${system}) mkGoEnv gomod2nix;
           };
 
-          nixosConfigurations.flakery = nixpkgs.lib.nixosSystem {
+          packages.nixosConfigurations.flakery = nixpkgs.lib.nixosSystem {
             system = system;
             specialArgs = {
               inherit inputs;
