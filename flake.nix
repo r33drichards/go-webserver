@@ -7,7 +7,7 @@
   inputs.gomod2nix.inputs.nixpkgs.follows = "nixpkgs";
   inputs.gomod2nix.inputs.flake-utils.follows = "flake-utils";
 
-  outputs = inputs@{ self, nixpkgs, flake-utils, gomod2nix }:
+  outputs =  inputs@{ self, nixpkgs, flake-utils, gomod2nix }:
     (flake-utils.lib.eachDefaultSystem
       (system:
         let
@@ -30,7 +30,7 @@
             inherit (gomod2nix.legacyPackages.${system}) mkGoEnv gomod2nix;
           };
 
-          packages.nixosConfigurations.flakery = nixpkgs.lib.nixosSystem {
+          nixosConfigurations.flakery = nixpkgs.lib.nixosSystem {
             system = system;
             specialArgs = {
               inherit inputs;

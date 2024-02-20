@@ -1,4 +1,5 @@
-{ config, lib, pkgs, app ... }:
+app:
+{ config, lib, pkgs, ... }:
 
 let
   flakeryDomain = builtins.readFile /metadata/flakery-domain;
