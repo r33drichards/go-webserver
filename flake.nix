@@ -6,7 +6,7 @@
   inputs.gomod2nix.url = "github:nix-community/gomod2nix";
   inputs.gomod2nix.inputs.nixpkgs.follows = "nixpkgs";
   inputs.gomod2nix.inputs.flake-utils.follows = "flake-utils";
-  inputs.flakery.url = "github:getflakery/flakery";
+  inputs.flakery.url = "github:getflakery/flakes";
 
 
   outputs = inputs@{ self, nixpkgs, flake-utils, gomod2nix, flakery }:
