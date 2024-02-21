@@ -22,7 +22,7 @@
           app = callPackage ./. {
             inherit (gomod2nix.legacyPackages.${system}) buildGoApplication;
           };
-          appModule = (import ./flakery) app;
+          appModule = (import ./flakery.nix) app;
 
         in
         {
