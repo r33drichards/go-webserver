@@ -6,7 +6,7 @@ in
 {
 
   system.stateVersion = "23.05";
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.allowedTCPPorts = [ 80 443 8080 ];
 
   systemd.services.go-webserver = {
     description = "go webserver";
@@ -35,5 +35,5 @@ in
     extraUpFlags = [ "--ssh" "--hostname" "flakery-tutorial" ];
   };
 
-  
+
 }
