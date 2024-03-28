@@ -19,16 +19,6 @@ in
     };
   };
 
-  services.caddy = {
-    enable = true;
-    virtualHosts."${flakeryDomain}".extraConfig = ''
-      handle /* {
-        reverse_proxy http://127.0.0.1:8080
-      }
-    '';
-  };
-
-
   services.tailscale = {
     enable = true;
     authKeyFile = "/tsauthkey";
