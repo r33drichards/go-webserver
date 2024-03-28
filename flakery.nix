@@ -4,6 +4,8 @@ let
   flakeryDomain = builtins.readFile /metadata/flakery-domain;
 in
 {
+
+  system.stateVersion = "23.05";
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 
   systemd.services.go-webserver = {
@@ -25,4 +27,13 @@ in
       }
     '';
   };
+
+
+  services.tailscale = {
+    enable = true;
+    authKeyFile = "/tsauthkey";
+    extraUpFlags = [ "--ssh" "--hostname" "flakery-tutorial" ];
+  };
+
+  
 }
