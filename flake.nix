@@ -34,6 +34,7 @@
           packages.nixosConfigurations.flakery = nixpkgs.lib.nixosSystem {
             system = system;
             modules = [
+              flakery.nixosModules.flakery
               appModule
             ];
           };
